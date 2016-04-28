@@ -1,31 +1,20 @@
 var pg = require('pg');
 
 function createConnection() {
-    var dbproperties = {
-        user: 'alexandre',
-        password: 'postgres',
-        host: 'localhost',
-        port: 5432
-    };
+    var stringConnection;
 
     switch(process.env.NODE_ENV) {
         case "test":
-            dbproperties.database = 'casadocodigo_nodejs_test';
+            stringConnection = "postgres://alexandre:postgres@localhost/casadocodigo_nodejs_test";
             break;
         case "production":
-            dbproperties = {
-                user: 'cclxcmkmzfniio',
-                password: '0M1O0OC8iw_oHFNEGDmP5qelqk',
-                host: 'ec2-54-163-226-48.compute-1.amazonaws.com',
-                database: 'dabpgm147al14q',
-                port: 5432
-            };
+            stringConnection = process.env.DATABASE_URL;
             break;
         default:
-            dbproperties.database = 'casadocodigo_nodejs';    
+            stringConnection = "postgres://alexandre:postgres@localhost/casadocodigo_nodejs"; 
     }
     
-    var client = new pg.Client(dbproperties);
+    var client = new pg.Client(stringConnection);
 
     client.connect(function(err) {
         if (err) {
